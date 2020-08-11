@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom'
+import Login from './components/Login'
+import Register from './components/Register'
+import UserContext from './context/UserContext'
+
 
 function App() {
+  const [auth, setAuth] = useState(localStorage.getItem('token') || '')
+
+  const context = {
+    auth,
+    setAuth
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <UserContext.Provider value={context}>
+      <div>Hello from the React App!</div>
+      <BrowserRouter>
+        <NavLink to='/register'>Register</NavLink>
+        <Switch>
+          <Route exact path='/' render={() => <Login />} />
+          <Route exact path='/register' render={() => <Register />} />
+        </Switch>
+      </BrowserRouter>
+    </UserContext.Provider>
+  )
 }
 
-export default App;
+export default App
