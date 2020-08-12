@@ -4,6 +4,7 @@ FROM node:12-alpine as base
 
 # ENV NODE_ENV=production
 
+
 # WORKDIR /app
 
 # COPY package*.json ./
