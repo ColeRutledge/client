@@ -31,7 +31,7 @@ FROM node:12-alpine as base
 
 FROM base as build
 
-ENV REACT_APP_API_SERVER_BASE_URL=https://pure-search.herokuapp.com/
+ENV REACT_APP_API_SERVER_BASE_URL=https://pure-search.herokuapp.com
 
 WORKDIR /app
 
