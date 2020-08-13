@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -8,6 +8,8 @@ import MenuIcon from '@material-ui/icons/Menu'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
+
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,29 +23,56 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function UiTest() {
+export default function MenuBar() {
   const classes = useStyles()
-  const [auth, setAuth] = React.useState(true)
-  const [anchorEl, setAnchorEl] = React.useState(null)
-  const open = Boolean(anchorEl)
+  const [ auth ] = useState(true)
+  const [ pAnchor, setPAnchor ] = useState(null)
+  const [ mAnchor, setMAnchor ] = useState(null)
+  const pOpen = Boolean(pAnchor)
+  const mOpen = Boolean(mAnchor)
 
 
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget)
+  const handlePMenu = (event) => {
+    setPAnchor(event.currentTarget)
   }
 
-  const handleClose = () => {
-    setAnchorEl(null)
+  const handlePClose = () => {
+    setPAnchor(null)
+  }
+
+  const handleMMenu = (event) => {
+    setMAnchor(event.currentTarget)
+  }
+
+  const handleMClose = () => {
+    setMAnchor(null)
   }
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={handleMMenu}
+          >
             <MenuIcon />
           </IconButton>
+          <Menu
+            id="simple-menu"
+            anchorEl={mAnchor}
+            keepMounted
+            open={mOpen}
+            onClose={handleMClose}
+          >
+            <MenuItem onClick={handleMClose} component={Link} to='/feed'>
+              <Typography>Feed</Typography>
+            </MenuItem>
+          </Menu>
           <Typography variant="h6" className={classes.title}>
             Menu
           </Typography>
@@ -53,14 +82,14 @@ export default function UiTest() {
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
-                onClick={handleMenu}
+                onClick={handlePMenu}
                 color="inherit"
               >
                 <AccountCircle />
               </IconButton>
               <Menu
                 id="menu-appbar"
-                anchorEl={anchorEl}
+                anchorEl={pAnchor}
                 anchorOrigin={{
                   vertical: 'top',
                   horizontal: 'right',
@@ -70,11 +99,15 @@ export default function UiTest() {
                   vertical: 'top',
                   horizontal: 'right',
                 }}
-                open={open}
-                onClose={handleClose}
+                open={pOpen}
+                onClose={handlePClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handlePClose} component={Link} to='/login'>
+                  <Typography>Login</Typography>
+                </MenuItem>
+                <MenuItem component={Link} onClick={handlePClose} to='/register'>
+                  <Typography>Register</Typography>
+                </MenuItem>
               </Menu>
             </div>
           )}

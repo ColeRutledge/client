@@ -1,15 +1,18 @@
-import { createMuiTheme } from '@material-ui/core/styles'
-import purple from '@material-ui/core/colors/purple'
-import green from '@material-ui/core/colors/green'
+import { unstable_createMuiStrictModeTheme } from '@material-ui/core/styles'
+import blue from '@material-ui/core/colors/blue'
+import red from '@material-ui/core/colors/red'
 
 
-const theme = createMuiTheme({
+const theme = unstable_createMuiStrictModeTheme({
   palette: {
     primary: {
-      main: green[100],
+      main: blue[200],
     },
     secondary: {
-      main: green[200],
+      main: blue[500],
+    },
+    error: {
+      main: red[300],
     },
   },
 })
