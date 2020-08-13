@@ -8,6 +8,9 @@ WORKDIR /app
 
 COPY package*.json ./
 
+# FOR MATERIAL TABLE
+RUN apk add git
+
 RUN npm ci && npm cache clean --force
 
 ENV PATH /app/node_modules/.bin:$PATH
@@ -35,6 +38,9 @@ CMD ["npm", "start"]
 # WORKDIR /app
 
 # COPY . .
+
+# MAY NOT BE NEEDED (FOR MATERIAL TABLE)
+# RUN apk add git
 
 # RUN npm install && npm run build
 

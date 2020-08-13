@@ -56,7 +56,6 @@ const Register = () => {
               paddingTop: '50px',
               flexDirection: 'column',
               marginTop: '75px',
-              marginLeft: '-250px'
             }}
         >
           <h1 style={{ fontSize: 22 }}>Registration</h1>

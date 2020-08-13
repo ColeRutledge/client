@@ -13,14 +13,17 @@ import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
+    // flexGrow: 1,
+    marginBottom: '100px',
   },
   menuButton: {
     marginRight: theme.spacing(2),
   },
-  title: {
-    flexGrow: 1,
-  },
+  profileMenu: {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'flex-end',
+  }
 }))
 
 export default function MenuBar() {
@@ -51,7 +54,7 @@ export default function MenuBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             edge="start"
@@ -73,17 +76,15 @@ export default function MenuBar() {
               <Typography>Feed</Typography>
             </MenuItem>
           </Menu>
-          <Typography variant="h6" className={classes.title}>
-            Menu
-          </Typography>
           {auth && (
-            <div>
+            <div className={classes.profileMenu}>
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handlePMenu}
                 color="inherit"
+                style={{ justifySelf: 'flex-end' }}
               >
                 <AccountCircle />
               </IconButton>

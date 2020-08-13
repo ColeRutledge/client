@@ -49,7 +49,7 @@ const Login = () => {
     <>
       {auth
         ? <Redirect to='/library' />
-        : <div style={{ display: 'flex', alignItems: 'center', paddingTop: '50px', flexDirection: 'column', marginLeft: '-250px', marginTop: '75px' }}>
+        : <div style={{ display: 'flex', alignItems: 'center', paddingTop: '50px', flexDirection: 'column', marginTop: '75px' }}>
           <h1 style={{ fontSize: 22 }}>Login</h1>
           <form
             onSubmit={handleSubmit(onSubmit)}
