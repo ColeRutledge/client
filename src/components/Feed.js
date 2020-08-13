@@ -1,16 +1,32 @@
 import React, { useState, useContext, useEffect } from 'react'
-import MaterialTable from 'material-table'
-import { Container, Link } from '@material-ui/core'
-import LinkIcon from '@material-ui/icons/Link';
 import { useHistory } from 'react-router-dom'
+import MaterialTable from 'material-table'
+import { Container, Link, Grid } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import LinkIcon from '@material-ui/icons/Link'
+import Paper from '@material-ui/core/Paper'
 
 import UserContext from '../context/UserContext'
 const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
+
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+}))
+
 
 const Feed = () => {
   const { auth, setAuth } = useContext(UserContext)
   const [ postings, setPostings ] = useState([])
   const history = useHistory()
+  const classes = useStyles()
 
   useEffect(() => {
     const fetchFeed = async () => {
@@ -49,32 +65,51 @@ const Feed = () => {
           columns={[
             { title: 'Title', field: 'job_title' },
             { title: 'Company', field: 'company' },
-            { title: 'City', field: 'city' },
-            { title: 'State', field: 'state' },
+            { title: 'Location', field: 'formatted_location' },
             {
               title: 'Url',
               field: 'url',
               disableClick: true,
-              render: posting => <Link href={posting.url} target='_blank'><LinkIcon color='error'/></Link>,
+              render: posting => (
+              <Link href={posting.url} target='_blank'>
+                <LinkIcon color='error'/>
+              </Link>
+              ),
               // headerStyle: {
               //   textAlign: 'right',
               // },
               // cellStyle: {
               //   textAlign: 'right',
               // },
-            }
+            },
+            // { title: 'State', field: 'state' },
           ]}
           data={postings}
-          title="Job Feed"
+          title='Job Feed'
           options={{ selection: true }}
           detailPanel={posting => {
             return (
-              <ul>
-                <li>{posting.job_title}</li>
-                <li>{posting.company}</li>
-                <li>{posting.city}</li>
-                <li>{posting.state}</li>
-              </ul>
+              <Grid
+                container
+                // spacing={2}
+                justify='center'
+                alignItems='center'
+                direction='row'
+                className={classes.root}
+              >
+                <Grid m={3} item xs={12}>
+                  <Paper className={classes.paper}>{posting.snippet}</Paper>
+                </Grid>
+                <Grid item xs={4}>
+                  <Paper className={classes.paper}>{posting.source}</Paper>
+                </Grid>
+                <Grid item xs={4}>
+                  <Paper className={classes.paper}>{posting.rel_time}</Paper>
+                </Grid>
+                <Grid item xs={4}>
+                  <Paper className={classes.paper}>{posting.formatted_location}</Paper>
+                </Grid>
+              </Grid>
             )
           }}
           onRowClick={(event, rowData, togglePanel) => togglePanel()}
