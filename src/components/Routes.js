@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
+import Dashboard from './Dashboard'
 import Login from './Login'
 import Register from './Register'
 import MenuBar from './MenuBar'
@@ -12,6 +13,7 @@ const Routes = () => {
     <BrowserRouter>
       <MenuBar />
       <Switch>
+        <Route exact path='/' render={() => <Dashboard />} />
         <Route exact path='/login' render={() => <Login />} />
         <Route exact path='/feed' render={() => <Feed />} />
         <Route exact path='/register' render={() => <Register />} />

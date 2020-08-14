@@ -8,7 +8,7 @@ const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 
 
 const Login = () => {
-  const { auth, setAuth } = useContext(UserContext)
+  const { auth, setAuth, setUserId } = useContext(UserContext)
   const [ loginError, setLoginError ] = useState('')
   const { register, handleSubmit, errors } = useForm()
 
@@ -31,6 +31,7 @@ const Login = () => {
         localStorage.setItem('username', data.username)
         localStorage.setItem('id', data.id)
         setAuth(data.token)
+        setUserId(+data.id)
         console.log(data)
       } else throw res
 
@@ -48,7 +49,7 @@ const Login = () => {
   return (
     <>
       {auth
-        ? <Redirect to='/library' />
+        ? <Redirect to='/' />
         : <div style={{ display: 'flex', alignItems: 'center', paddingTop: '50px', flexDirection: 'column', marginTop: '75px' }}>
           <h1 style={{ fontSize: 22 }}>Login</h1>
           <form
