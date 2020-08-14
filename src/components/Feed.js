@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import MaterialTable from 'material-table'
-import { Container, Link, Grid } from '@material-ui/core'
+import { Container, Link, Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import LinkIcon from '@material-ui/icons/Link'
 import Paper from '@material-ui/core/Paper'
@@ -13,11 +13,13 @@ const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    margin: '5px 0',
   },
   paper: {
     padding: theme.spacing(2),
+    margin: '0 10px',
     textAlign: 'center',
-    color: theme.palette.text.secondary,
+    color: theme.palette.secondary,
   },
 }))
 
@@ -91,23 +93,23 @@ const Feed = () => {
             return (
               <Grid
                 container
-                // spacing={2}
+                spacing={1}
                 justify='center'
                 alignItems='center'
                 direction='row'
                 className={classes.root}
               >
-                <Grid m={3} item xs={12}>
-                  <Paper className={classes.paper}>{posting.snippet}</Paper>
+                <Grid item xs={12}>
+                  <Paper className={classes.paper}><Typography>{posting.snippet}</Typography></Paper>
                 </Grid>
                 <Grid item xs={4}>
-                  <Paper className={classes.paper}>{posting.source}</Paper>
+                  <Paper className={classes.paper}><Typography>Source: {posting.source}</Typography></Paper>
                 </Grid>
                 <Grid item xs={4}>
-                  <Paper className={classes.paper}>{posting.rel_time}</Paper>
+                  <Paper className={classes.paper}><Typography>{posting.rel_time}</Typography></Paper>
                 </Grid>
                 <Grid item xs={4}>
-                  <Paper className={classes.paper}>{posting.formatted_location}</Paper>
+                  <Paper className={classes.paper}><Typography>{posting.formatted_location}</Typography></Paper>
                 </Grid>
               </Grid>
             )
