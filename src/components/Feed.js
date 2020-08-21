@@ -64,16 +64,26 @@ const Feed = () => {
       {postings.length > 0 &&
       <div style={{ maxWidth: '100%' }}>
         <MaterialTable
+          data={postings}
+          title='Job Feed'
+          onRowClick={(event, rowData, togglePanel) => togglePanel()}
+          options={{
+            selection: true,
+            rowStyle: { backgroundColor: '#EEE' },
+            headerStyle: { backgroundColor: '#02203c', color: '#FFF' },
+            pageSize: 10,
+            pageSizeOptions: [10, 25, 50],
+          }}
           columns={[
-            { title: 'Title', field: 'job_title' },
+            { title: 'Title', field: 'title' },
             { title: 'Company', field: 'company' },
-            { title: 'Location', field: 'formatted_location' },
+            { title: 'Location', field: 'location' },
             {
-              title: 'Url',
-              field: 'url',
+              title: 'Link',
+              field: 'link',
               disableClick: true,
               render: posting => (
-              <Link href={posting.url} target='_blank'>
+              <Link href={posting.link} target='_blank'>
                 <LinkIcon color='error'/>
               </Link>
               ),
@@ -86,9 +96,6 @@ const Feed = () => {
             },
             // { title: 'State', field: 'state' },
           ]}
-          data={postings}
-          title='Job Feed'
-          options={{ selection: true }}
           detailPanel={posting => {
             return (
               <Grid
@@ -100,21 +107,28 @@ const Feed = () => {
                 className={classes.root}
               >
                 <Grid item xs={12}>
-                  <Paper className={classes.paper}><Typography>{posting.snippet}</Typography></Paper>
+                  <Paper className={classes.paper}>
+                    <Typography>{posting.snippet}...</Typography>
+                  </Paper>
                 </Grid>
                 <Grid item xs={4}>
-                  <Paper className={classes.paper}><Typography>Source: {posting.source}</Typography></Paper>
+                  <Paper className={classes.paper}>
+                    <Typography>Salary: {posting.salary}</Typography>
+                  </Paper>
                 </Grid>
                 <Grid item xs={4}>
-                  <Paper className={classes.paper}><Typography>{posting.rel_time}</Typography></Paper>
+                  <Paper className={classes.paper}>
+                    <Typography>{posting.date}</Typography>
+                  </Paper>
                 </Grid>
                 <Grid item xs={4}>
-                  <Paper className={classes.paper}><Typography>{posting.formatted_location}</Typography></Paper>
+                  <Paper className={classes.paper}>
+                    <Typography>{posting.location}</Typography>
+                  </Paper>
                 </Grid>
               </Grid>
             )
           }}
-          onRowClick={(event, rowData, togglePanel) => togglePanel()}
         />
       </div>
       }
