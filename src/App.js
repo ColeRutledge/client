@@ -7,10 +7,13 @@ import Routes from './components/Routes'
 
 function App() {
   const [ auth, setAuth ] = useState(localStorage.getItem('token') || '')
+  const [ userId, setUserId ] = useState(+localStorage.getItem('id') || null)
 
   const context = {
     auth,
-    setAuth
+    setAuth,
+    userId,
+    setUserId,
   }
 
 

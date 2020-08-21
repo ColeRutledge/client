@@ -48,7 +48,7 @@ const Register = () => {
   return (
     <>
       {auth
-        ? <Redirect to='/library' />
+        ? <Redirect to='/' />
         : <div
             style={{
               display: 'flex',
