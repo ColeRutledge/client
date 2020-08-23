@@ -13,7 +13,8 @@ const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    margin: '5px 0',
+    padding: '5px 0',
+    backgroundColor: '#EEE',
   },
   paper: {
     padding: theme.spacing(2),
@@ -59,6 +60,10 @@ const Feed = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const bookmark = (rows) => {
+    console.log(rows)
+  }
+
   return (
     <Container >
       {postings.length > 0 &&
@@ -67,8 +72,10 @@ const Feed = () => {
           data={postings}
           title='Job Feed'
           onRowClick={(event, rowData, togglePanel) => togglePanel()}
+          onSelectionChange={rows => bookmark(rows)}
           options={{
             selection: true,
+            // selectionProps: ,
             rowStyle: { backgroundColor: '#EEE' },
             headerStyle: { backgroundColor: '#02203c', color: '#FFF' },
             pageSize: 10,
@@ -77,7 +84,7 @@ const Feed = () => {
           columns={[
             { title: 'Title', field: 'title' },
             { title: 'Company', field: 'company' },
-            { title: 'Location', field: 'location' },
+            { title: 'Location', field: 'search_loc' },
             {
               title: 'Link',
               field: 'link',
@@ -113,7 +120,7 @@ const Feed = () => {
                 </Grid>
                 <Grid item xs={4}>
                   <Paper className={classes.paper}>
-                    <Typography>Salary: {posting.salary}</Typography>
+                    <Typography>Salary: {posting.salary === 'None' ? 'N/A' : posting.salary}</Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={4}>
