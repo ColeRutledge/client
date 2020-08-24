@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import { Link } from 'react-router-dom'
+
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -9,7 +11,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 
-import { Link } from 'react-router-dom'
+import UserContext from '../context/UserContext'
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,13 +31,18 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MenuBar() {
   const classes = useStyles()
-  const [ auth ] = useState(true)
+  const { auth, setAuth } = useContext(UserContext)
   const [ pAnchor, setPAnchor ] = useState(null)
   const [ mAnchor, setMAnchor ] = useState(null)
   const pOpen = Boolean(pAnchor)
   const mOpen = Boolean(mAnchor)
 
 
+  const logout = () => {
+    localStorage.removeItem('token')
+    setAuth('')
+    // history.push('/login')
+  }
 
   const handlePMenu = (event) => {
     setPAnchor(event.currentTarget)
@@ -42,6 +50,7 @@ export default function MenuBar() {
 
   const handlePClose = () => {
     setPAnchor(null)
+
   }
 
   const handleMMenu = (event) => {
@@ -72,9 +81,24 @@ export default function MenuBar() {
             open={mOpen}
             onClose={handleMClose}
           >
-            <MenuItem onClick={handleMClose} component={Link} to='/feed'>
-              <Typography>Feed</Typography>
-            </MenuItem>
+            {auth
+            ? <div>
+                <MenuItem onClick={handleMClose} component={Link} to='/feed'>
+                  <Typography>Feed</Typography>
+                </MenuItem>
+                <MenuItem onClick={handleMClose} component={Link} to='/bookmarks'>
+                  <Typography>Bookmarks</Typography>
+                </MenuItem>
+              </div>
+            : <div>
+                <MenuItem component={Link} onClick={handleMClose} to='/login'>
+                  <Typography>Login</Typography>
+                </MenuItem>
+                <MenuItem component={Link} onClick={handleMClose} to='/register'>
+                  <Typography>Register</Typography>
+                </MenuItem>
+              </div>
+            }
           </Menu>
           {auth && (
             <div className={classes.profileMenu}>
@@ -103,11 +127,8 @@ export default function MenuBar() {
                 open={pOpen}
                 onClose={handlePClose}
               >
-                <MenuItem onClick={handlePClose} component={Link} to='/login'>
-                  <Typography>Login</Typography>
-                </MenuItem>
-                <MenuItem component={Link} onClick={handlePClose} to='/register'>
-                  <Typography>Register</Typography>
+                <MenuItem onClick={logout} component={Link} to='/login'>
+                  <Typography>Logout</Typography>
                 </MenuItem>
               </Menu>
             </div>

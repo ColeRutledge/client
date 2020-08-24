@@ -5,6 +5,7 @@ import Login from './Login'
 import Register from './Register'
 import MenuBar from './MenuBar'
 import Feed from './Feed'
+import Bookmarks from './Bookmarks'
 import ProtectedRoute from './ProtectedRoute'
 
 
@@ -17,6 +18,7 @@ const Routes = () => {
         <Route exact path='/register' render={() => <Register />} />
         <ProtectedRoute exact path='/' component={Feed} />
         <ProtectedRoute exact path='/feed' component={Feed} />
+        <ProtectedRoute exact path='/bookmarks' component={Bookmarks} />
       </Switch>
     </BrowserRouter>
   )

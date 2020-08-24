@@ -25,16 +25,16 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 
-const Feed = () => {
+const Bookmarks = () => {
   const { auth, setAuth } = useContext(UserContext)
-  const [ postings, setPostings ] = useState([])
+  const [ bookmarks, setBookmarks ] = useState([])
   const history = useHistory()
   const classes = useStyles()
 
   useEffect(() => {
-    const fetchFeed = async () => {
+    const fetchBookmarks = async () => {
       try {
-        const res = await fetch(`${apiUrl}/api/posting`, {
+        const res = await fetch(`${apiUrl}/api/user/bookmark`, {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || auth}` }
         })
@@ -42,7 +42,7 @@ const Feed = () => {
         if (res.ok) {
           const data = await res.json()
           console.log(data)
-          setPostings([...data])
+          setBookmarks([...data])
         } else throw res
 
       } catch (err) {
@@ -56,7 +56,7 @@ const Feed = () => {
       }
     }
 
-    fetchFeed()
+    fetchBookmarks()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -75,7 +75,7 @@ const Feed = () => {
       if (res.ok) {
         const data = await res.json()
         console.log(data)
-        // setPostings([...data])
+        setBookmarks([...data])
       } else throw res
 
     } catch (err) {
@@ -92,27 +92,24 @@ const Feed = () => {
 
   return (
     <Container >
-      {postings.length > 0 &&
+      {bookmarks.length > 0 &&
       <div style={{ maxWidth: '100%' }}>
         <MaterialTable
-          data={postings}
-          title='Job Feed'
+          data={bookmarks}
+          title='Bookmarks'
+          showEmptyDataSourceMessage
           onRowClick={(event, rowData, togglePanel) => togglePanel()}
           onSelectionChange={(rows, row) => bookmark(rows, row)}
-          localization={{
-            toolbar: {
-              nRowsSelected: `{0} posting(s) bookmarked`
-            },
-          }}
           options={{
             selection: true,
-            // selectionProps: ,
             showSelectAllCheckbox: false,
+            selectionProps: {
+              checked: true,
+            },
             rowStyle: { backgroundColor: '#EEE' },
             // headerStyle: { backgroundColor: '#02203c', color: '#FFF' },
             pageSize: 10,
             pageSizeOptions: [10, 25, 50],
-            grouping: true,
           }}
           columns={[
             { title: 'Title', field: 'title' },
@@ -122,7 +119,6 @@ const Feed = () => {
               title: 'Link',
               field: 'link',
               disableClick: true,
-              sorting: false,
               render: posting => (
               <Link href={posting.link} target='_blank'>
                 <LinkIcon color='error'/>
@@ -177,4 +173,4 @@ const Feed = () => {
   )
 }
 
-export default Feed
+export default Bookmarks
