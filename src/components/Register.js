@@ -10,10 +10,11 @@ const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 const Register = () => {
   const { auth, setAuth } = useContext(UserContext)
   const [ registerError, setRegisterError ] = useState('')
-  const { register, handleSubmit, errors } = useForm()
+  const { register, handleSubmit, errors, clearErrors } = useForm()
 
   const onSubmit = async data => {
     console.log(data)
+    if (data.password !== data.confirmPassword) return setRegisterError('Confirmed password does not match.')
     try {
       const res = await fetch(`${apiUrl}/api/user/register`, {
         method: 'POST',
@@ -70,6 +71,7 @@ const Register = () => {
               variant='outlined'
               style={{ margin: '10px 0' }}
               inputRef={register({ required: true, maxLength: 50 })}
+              onChange={e => { clearErrors(e.target.name) }}
             />
             {errors.userName?.type === 'required' &&
               <Typography style={errorStyles}
@@ -85,6 +87,7 @@ const Register = () => {
               variant='outlined'
               style={{ margin: '10px 0' }}
               inputRef={register({ required: true, maxLength: 50 })}
+              onChange={e => { clearErrors(e.target.name) }}
             />
             {errors.firstName?.type === 'required' &&
               <Typography style={errorStyles}
@@ -100,6 +103,7 @@ const Register = () => {
               variant='outlined'
               style={{ margin: '10px 0' }}
               inputRef={register({ required: true, maxLength: 50 })}
+              onChange={e => { clearErrors(e.target.name) }}
             />
             {errors.lastName?.type === 'required' &&
               <Typography style={errorStyles}
@@ -116,6 +120,7 @@ const Register = () => {
               variant='outlined'
               style={{ margin: '10px 0' }}
               inputRef={register({ required: true, maxLength: 50 })}
+              onChange={e => { clearErrors(e.target.name) }}
             />
             {errors.email?.type === 'required' &&
               <Typography style={errorStyles}
@@ -132,6 +137,7 @@ const Register = () => {
               variant='outlined'
               style={{ margin: '10px 0' }}
               inputRef={register({ required: true, minLength: 6, pattern: /^(?=.*\d)(?=.*[a-z])/ })}
+              onChange={e => { clearErrors(e.target.name) }}
             />
             {errors.password?.type === 'required' &&
               <Typography style={errorStyles}
@@ -154,6 +160,7 @@ const Register = () => {
               variant='outlined'
               style={{ margin: '10px 0' }}
               inputRef={register({ required: true, minLength: 6, pattern: /^(?=.*\d)(?=.*[a-z])/ })}
+              onChange={e => { clearErrors(e.target.name); setRegisterError('') }}
             />
             {errors.confirmPassword?.type === 'required' &&
               <Typography style={errorStyles}

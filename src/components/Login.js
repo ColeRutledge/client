@@ -10,7 +10,7 @@ const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 const Login = () => {
   const { auth, setAuth, setUserId } = useContext(UserContext)
   const [ loginError, setLoginError ] = useState('')
-  const { register, handleSubmit, errors } = useForm()
+  const { register, handleSubmit, errors, clearErrors } = useForm()
 
   const onSubmit = async data => {
     console.log(data)
@@ -63,6 +63,7 @@ const Login = () => {
               variant='outlined'
               style={{ margin: '15px 0' }}
               inputRef={register({ required: true, maxLength: 255 })}
+              onChange={e => { console.log(errors); clearErrors(e.target.name) }}
             />
             {errors.email?.type === 'required' &&
               <Typography style={errorStyles}
@@ -79,6 +80,7 @@ const Login = () => {
               variant='outlined'
               style={{ margin: '15px 0' }}
               inputRef={register({ required: true, minLength: 6, pattern: /^(?=.*\d)(?=.*[a-z])/ })}
+              onChange={e => { clearErrors(e.target.name); setLoginError('') }}
             />
             {errors.password?.type === 'required' &&
               <Typography style={errorStyles}
