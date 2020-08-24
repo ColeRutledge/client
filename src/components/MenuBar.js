@@ -38,7 +38,8 @@ export default function MenuBar() {
   const mOpen = Boolean(mAnchor)
 
 
-  const logout = () => {
+  const logout = (e) => {
+    handlePClose(e)
     localStorage.removeItem('token')
     setAuth('')
     // history.push('/login')

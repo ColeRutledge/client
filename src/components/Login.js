@@ -63,7 +63,7 @@ const Login = () => {
               variant='outlined'
               style={{ margin: '15px 0' }}
               inputRef={register({ required: true, maxLength: 255 })}
-              onChange={e => { console.log(errors); clearErrors(e.target.name) }}
+              onChange={e => { clearErrors(e.target.name) }}
             />
             {errors.email?.type === 'required' &&
               <Typography style={errorStyles}
