@@ -83,22 +83,22 @@ export default function MenuBar() {
             onClose={handleMClose}
           >
             {auth
-            ? <div>
-                <MenuItem onClick={handleMClose} component={Link} to='/feed'>
-                  <Typography>Feed</Typography>
-                </MenuItem>
-                <MenuItem onClick={handleMClose} component={Link} to='/bookmarks'>
-                  <Typography>Bookmarks</Typography>
-                </MenuItem>
-              </div>
-            : <div>
-                <MenuItem component={Link} onClick={handleMClose} to='/login'>
-                  <Typography>Login</Typography>
-                </MenuItem>
-                <MenuItem component={Link} onClick={handleMClose} to='/register'>
-                  <Typography>Register</Typography>
-                </MenuItem>
-              </div>
+              ? <div>
+                  <MenuItem onClick={handleMClose} component={Link} to='/feed'>
+                    <Typography>Feed</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleMClose} component={Link} to='/bookmarks'>
+                    <Typography>Bookmarks</Typography>
+                  </MenuItem>
+                </div>
+              : <div>
+                  <MenuItem component={Link} onClick={handleMClose} to='/login'>
+                    <Typography>Login</Typography>
+                  </MenuItem>
+                  <MenuItem component={Link} onClick={handleMClose} to='/register'>
+                    <Typography>Register</Typography>
+                  </MenuItem>
+                </div>
             }
           </Menu>
           {auth && (

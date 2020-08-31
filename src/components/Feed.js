@@ -69,7 +69,7 @@ const Feed = () => {
           'Authorization': `Bearer ${localStorage.getItem('token') || auth}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({row_id: row.id, checked: row.tableData.checked })
+        body: JSON.stringify({ row_id: row.id, checked: row.tableData.checked })
       })
 
       if (res.ok) {
@@ -91,7 +91,7 @@ const Feed = () => {
 
 
   return (
-    <Container >
+    <Container>
       {postings.length > 0 &&
       <div style={{ maxWidth: '100%' }}>
         <MaterialTable

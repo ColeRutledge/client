@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { TextField, Button, Typography } from '@material-ui/core'
+import { TextField, Button, Typography, CircularProgress } from '@material-ui/core'
 import UserContext from '../context/UserContext'
 
 const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
@@ -10,10 +10,13 @@ const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 const Login = () => {
   const { auth, setAuth, setUserId } = useContext(UserContext)
   const [ loginError, setLoginError ] = useState('')
+  const [ loading, setLoading ] = useState(false)
   const { register, handleSubmit, errors, clearErrors } = useForm()
 
   const onSubmit = async data => {
     console.log(data)
+    if (!data.email) data = { email: 'demo_user@email.com', password: 'password1' }
+    setLoading(true)
     try {
       const res = await fetch(`${apiUrl}/api/user/login`, {
         method: 'POST',
@@ -23,6 +26,7 @@ const Login = () => {
 
       if (res.ok) {
         let data = await res.json()
+        setLoading(false)
         if (data.error) {
           return setLoginError(data.error)
         }
@@ -36,7 +40,8 @@ const Login = () => {
       } else throw res
 
     } catch (err) {
-      console.log(err)
+      setLoading(false)
+      console.error(err)
     }
   }
 
@@ -98,11 +103,28 @@ const Login = () => {
               <Typography style={{ ...errorStyles, marginTop: '2px' }}
               >{loginError}
               </Typography>}
-            <Button
-              variant='outlined'
-              type='submit'
-              style={{ margin: '20px 0' }}
-            >Submit</Button>
+            <div style={{ display: 'flex' }}>
+              <Button
+                variant='outlined'
+                type='submit'
+                style={{ margin: '20px 5px 0 0' }}
+                disabled={loading}
+                fullWidth={true}
+              >{loading
+                ? <CircularProgress size={22} thickness={2} />
+                : 'Submit'}
+              </Button>
+              <Button
+                fullWidth={true}
+                variant='outlined'
+                style={{ margin: '20px 0 0 5px' }}
+                disabled={loading}
+                onClick={onSubmit}
+              >{loading
+                ? <CircularProgress size={22} thickness={2} />
+                : 'Demo User'}
+              </Button>
+            </div>
           </form>
         </div>
       }
