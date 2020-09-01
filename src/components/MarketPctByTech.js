@@ -1,57 +1,11 @@
-import React from 'react'
-import { Doughnut, Pie, defaults } from 'react-chartjs-2'
+import React, { useState, useEffect, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
+import { Doughnut, defaults } from 'react-chartjs-2'
 import Chart from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import UserContext from '../context/UserContext'
+const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 
-// search_terms          search_loc
-// javascript developer  New York, NY         22.72
-//                       Washington, DC       22.72
-//                       Austin, TX           21.72
-//                       San Francisco, CA    21.22
-//                       Charlotte, NC        11.61
-// python developer      Washington, DC       24.87
-//                       New York, NY         24.36
-//                       San Francisco, CA    23.76
-//                       Austin, TX           20.78
-//                       Charlotte, NC         6.22
-
-const jsChartData = {
-  labels: ['Austin', 'Charlotte', 'New York', 'San Francisco', 'Washington DC'],
-  datasets: [
-    {
-      label: 'JavaScript',
-      data: [22, 12, 22, 21, 23],
-      backgroundColor: [
-        'rgba(247, 223, 30, 0.4)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-      ],
-      borderColor: 'rgba(247, 223, 30, 1)',
-      borderWidth: 1,
-    },
-  ]
-}
-
-const pyChartData = {
-  labels: ['Austin', 'Charlotte', 'New York', 'San Francisco', 'Washington DC'],
-  datasets: [
-    {
-      label: 'Python',
-      data: [21, 6, 24, 24, 25],
-      backgroundColor: [
-        'rgba(247, 223, 30, 0.4)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-      ],
-      borderColor: 'rgba(55, 118, 171, 1)',
-      borderWidth: 1,
-    },
-  ]
-}
 
 const chartOptions = {
   cutoutPercentage: 80,
@@ -92,16 +46,89 @@ defaults.global.defaultFontFamily = (
   )
 
 const MarketPctByTech = () => {
+  const { auth, setAuth } = useContext(UserContext)
+  const [ data, setData ] = useState({})
+  const history = useHistory()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${apiUrl}/mktmetrics`, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || auth}` }
+        })
+
+        if (res.ok) {
+          const data = await res.json()
+          // console.log(data)
+          setData({...data})
+        } else throw res
+
+      } catch (err) {
+        if (err.status === 401) {
+          localStorage.removeItem('token')
+          setAuth('')
+          history.push('/login')
+        }
+        console.dir(err)
+        console.error(err)
+      }
+    }
+
+    fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const jsChartData = {
+    labels: data.javascript?.labels,
+    datasets: [
+      {
+        label: 'JavaScript',
+        data: data.javascript?.mkt_pct,
+        backgroundColor: [
+          'rgba(247, 223, 30, 0.4)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+        ],
+        borderColor: 'rgba(247, 223, 30, 1)',
+        borderWidth: 1,
+      },
+    ]
+  }
+
+  const pyChartData = {
+    labels: data.python?.labels,
+    datasets: [
+      {
+        label: 'Python',
+        data: data.python?.mkt_pct,
+        backgroundColor: [
+          'rgba(247, 223, 30, 0.4)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+        ],
+        borderColor: 'rgba(55, 118, 171, 1)',
+        borderWidth: 1,
+      },
+    ]
+  }
+
+
   return (
-    <>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
       <div
         style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
           backgroundColor: '#EEE',
-          maxWidth: '100vw',
+          width: '80vw',
+          minWidth: '800px',
+          maxWidth: '1250px',
           height: '60vh',
-          // width: '100%',
           margin: '50px',
           padding: '25px',
           boxShadow: '0 10px 30px 0 rgba(0,0,0,.3), 0 1px 2px 0 rgba(0,0,0,.2)'
@@ -110,8 +137,6 @@ const MarketPctByTech = () => {
         <div>
           <Doughnut
             data={jsChartData}
-            // width={750}
-            // height={10}
             options={chartOptions}
             plugins={[ChartDataLabels]}
             />
@@ -119,14 +144,12 @@ const MarketPctByTech = () => {
         <div>
           <Doughnut
             data={pyChartData}
-            // width={750}
-            // height={10}
             options={{...chartOptions, title: { display: true, text: 'Python Market Share by Location' }}}
             plugins={[ChartDataLabels]}
           />
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

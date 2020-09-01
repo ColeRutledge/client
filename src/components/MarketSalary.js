@@ -1,46 +1,25 @@
-import React from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Bar, defaults } from 'react-chartjs-2'
 import Chart from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import { useHistory } from 'react-router-dom'
+import UserContext from '../context/UserContext'
+const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 
-const chartData = {
-  labels: ['Austin', 'Charlotte', 'New York', 'San Francisco', 'Washington DC'],
-  datasets: [
-    {
-      label: 'JavaScript',
-      data: [110.4, 116.4, 116.5, 141.9, 115.2],
-      backgroundColor: 'rgba(247, 223, 30, 0.4)',
-      borderColor: 'rgba(247, 223, 30, 1)',
-      borderWidth: 2,
-    },
-    {
-      label: 'Python',
-      data: [154.3, 131.4, 162.1, 160.7, 120.3],
-      backgroundColor: 'rgba(55, 118, 171, 0.2)',
-      borderColor: 'rgba(55, 118, 171, 1)',
-      borderWidth: 2,
-    },
-  ]
-}
 
 const chartOptions = {
   maintainAspectRatio: false,
   title: {
     display: true,
     text: 'Avg Market Salaries',
-    // fontSize: 30,
-    // padding: 50,
   },
   legend: {
     labels: {
-      // fontSize: 20,
-      // padding: 30,
       filter: function(legendItem, chartData) {
         return legendItem.text !== 'Avg'
       }
     },
     position: 'bottom',
-    borderWidth: 0,
   },
   elements: {
     point: {
@@ -49,8 +28,6 @@ const chartOptions = {
   },
   plugins: {
     datalabels: {
-      // color: '#36A2EB',
-      // fontSize: '10px',
       formatter: function(value, context) {
         return '$' + value + 'k'
       }
@@ -60,7 +37,7 @@ const chartOptions = {
     callbacks: {
       label: function(tooltipItem, data) {
         let label = data.datasets[tooltipItem.datasetIndex].label || ''
-        label += ': $' + Math.round(tooltipItem.yLabel) + 'k'
+        label += ': $' + Math.round(tooltipItem.yLabel)  + 'k'
         return label
       }
     }
@@ -69,22 +46,18 @@ const chartOptions = {
     xAxes: [{
        gridLines: {
           display: false,
-          // drawOnChartArea: false,
        },
-       ticks: {
-        // fontSize: 20,
-       },
+      //  ticks: {
+      //  },
     }],
     yAxes: [{
        gridLines: {
-          // display: false,
           drawOnChartArea: false,
        },
        ticks: {
          stepSize: 15,
          max: 165.000,
          min: 90.000,
-        //  fontSize:20,
          callback: function(value, index, values) {
           return '$' + value + 'k'
          }
@@ -104,28 +77,94 @@ defaults.global.defaultFontFamily = (
   )
 
 const MarketSalary = () => {
+  const { auth, setAuth } = useContext(UserContext)
+  const [ data, setData ] = useState({})
+  const history = useHistory()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${apiUrl}/avgmktsalaries`, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || auth}` }
+        })
+
+        if (res.ok) {
+          const data = await res.json()
+          // console.log(data)
+          setData({...data})
+        } else throw res
+
+      } catch (err) {
+        if (err.status === 401) {
+          localStorage.removeItem('token')
+          setAuth('')
+          history.push('/login')
+        }
+        console.dir(err)
+        console.error(err)
+      }
+    }
+
+    fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const chartData = {
+    // labels: ['Austin', 'Charlotte', 'New York', 'San Francisco', 'Washington DC'],
+    labels: data.javascript?.labels,
+    datasets: [
+      {
+        label: 'JavaScript',
+        data: data.javascript?.avg_salaries,
+        backgroundColor: 'rgba(247, 223, 30, 0.4)',
+        borderColor: 'rgba(247, 223, 30, 1)',
+        borderWidth: 2,
+      },
+      {
+        label: 'Python',
+        data: data.python?.avg_salaries,
+        backgroundColor: 'rgba(55, 118, 171, 0.2)',
+        borderColor: 'rgba(55, 118, 171, 1)',
+        borderWidth: 2,
+      },
+    ]
+  }
+
+
   return (
-    <div
-      style={{
-        backgroundColor: '#EEE',
-        margin: '50px',
-        padding: '25px',
-        boxShadow: '0 10px 30px 0 rgba(0,0,0,.3), 0 1px 2px 0 rgba(0,0,0,.2)',
-        // height: '500px',
-        maxWidth: '100vw',
-        height: '60vh',
-        // width: '600px',
-      }}
-    >
-      <Bar
-        data={chartData}
-        // width={100}
-        // height={20}
-        options={chartOptions}
-        plugins={[ChartDataLabels]}
-      />
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div
+        style={{
+          backgroundColor: '#EEE',
+          margin: '50px',
+          padding: '25px',
+          boxShadow: '0 10px 30px 0 rgba(0,0,0,.3), 0 1px 2px 0 rgba(0,0,0,.2)',
+          width: '80vw',
+          maxWidth: '1250px',
+          minWidth: '800px',
+          height: '60vh',
+        }}
+      >
+        <Bar
+          // style={{ justifyContent: 'center' }}
+          data={chartData}
+          // width={100}
+          // height={20}
+          options={chartOptions}
+          plugins={[ChartDataLabels]}
+        />
+      </div>
     </div>
   )
 }
 
 export default MarketSalary
+
+
+// const data = {
+//   'python': 'hello',
+//   'javascript': 'helloo',
+// }
+
+// console.log(data.length)

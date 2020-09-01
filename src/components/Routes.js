@@ -7,6 +7,7 @@ import MenuBar from './MenuBar'
 import Feed from './Feed'
 import Bookmarks from './Bookmarks'
 import ProtectedRoute from './ProtectedRoute'
+import Dashboard from './Dashboard'
 
 
 const Routes = () => {
@@ -16,7 +17,7 @@ const Routes = () => {
       <Switch>
         <Route exact path='/login' render={() => <Login />} />
         <Route exact path='/register' render={() => <Register />} />
-        <ProtectedRoute exact path='/' component={Feed} />
+        <ProtectedRoute exact path='/' component={Dashboard} />
         <ProtectedRoute exact path='/feed' component={Feed} />
         <ProtectedRoute exact path='/bookmarks' component={Bookmarks} />
       </Switch>
