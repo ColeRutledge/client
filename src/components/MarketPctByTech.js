@@ -1,52 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useHistory } from 'react-router-dom'
-import { Doughnut, defaults } from 'react-chartjs-2'
-import Chart from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import { useHistory } from 'react-router-dom'
+import { Doughnut } from 'react-chartjs-2'
 import UserContext from '../context/UserContext'
+
 const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 
 
 const chartOptions = {
   cutoutPercentage: 80,
   maintainAspectRatio: false,
-  layout: {
-    padding: 50,
-  },
-  title: {
-    display: true,
-    text: 'JavaScript Market Share by Location',
-  },
-  legend: {
-    labels: {
-      padding: 30,
-      fontSize: 15,
-    },
-    position: 'bottom',
-  },
-  plugins: {
-    datalabels: {
-      formatter: function(value, context) {
-        return value + '%'
-      }
-    }
-  },
-  tooltips: {
-    callbacks: {
-      label: function(tooltipItem, data) {
-        return data.labels[tooltipItem.index]
-      }
-    }
-  },
+  layout: { padding: 50 },
+  title: { display: true, text: 'JavaScript Market Share by Location' },
+  legend: { labels: { padding: 20, fontSize: 13 }, position: 'bottom' },
+  plugins: { datalabels: { formatter: (value, context) => value + '%' }},
+  tooltips: { callbacks: { label: (tooltipItem, data) => data.labels[tooltipItem.index] }},
 }
 
-Chart.plugins.unregister(ChartDataLabels)
-// defaults.global.defaultFontSize = 16
-defaults.global.defaultFontFamily = (
-  "-apple-system, BlinkMacSystemFont, 'Segoe UI', \
-  'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', \
-  'Droid Sans', 'Helvetica Neue', sans-serif"
-  )
 
 const MarketPctByTech = () => {
   const { auth, setAuth } = useContext(UserContext)
@@ -63,7 +33,6 @@ const MarketPctByTech = () => {
 
         if (res.ok) {
           const data = await res.json()
-          // console.log(data)
           setData({...data})
         } else throw res
 
@@ -88,13 +57,7 @@ const MarketPctByTech = () => {
       {
         label: 'JavaScript',
         data: data.javascript?.mkt_pct,
-        backgroundColor: [
-          'rgba(247, 223, 30, 0.4)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-        ],
+        backgroundColor: data.javascript?.background_color,
         borderColor: 'rgba(247, 223, 30, 1)',
         borderWidth: 1,
       },
@@ -107,13 +70,7 @@ const MarketPctByTech = () => {
       {
         label: 'Python',
         data: data.python?.mkt_pct,
-        backgroundColor: [
-          'rgba(247, 223, 30, 0.4)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-        ],
+        backgroundColor: data.python?.background_color,
         borderColor: 'rgba(55, 118, 171, 1)',
         borderWidth: 1,
       },
@@ -146,7 +103,10 @@ const MarketPctByTech = () => {
         <div>
           <Doughnut
             data={pyChartData}
-            options={{ ...chartOptions, title: { display: true, text: 'Python Market Share by Location' }}}
+            options={{
+              ...chartOptions,
+              title: { display: true, text: 'Python Market Share by Location' },
+            }}
             plugins={[ChartDataLabels]}
           />
         </div>
