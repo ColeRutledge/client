@@ -10,6 +10,9 @@ const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 const chartOptions = {
   cutoutPercentage: 80,
   maintainAspectRatio: false,
+  layout: {
+    padding: 50,
+  },
   title: {
     display: true,
     text: 'JavaScript Market Share by Location',
@@ -126,11 +129,10 @@ const MarketPctByTech = () => {
           gridTemplateColumns: '1fr 1fr',
           backgroundColor: '#EEE',
           width: '80vw',
-          minWidth: '800px',
-          maxWidth: '1250px',
           height: '60vh',
+          minWidth: '800px',
+          maxWidth: '1500px',
           margin: '50px',
-          padding: '25px',
           boxShadow: '0 10px 30px 0 rgba(0,0,0,.3), 0 1px 2px 0 rgba(0,0,0,.2)'
         }}
       >
@@ -144,7 +146,7 @@ const MarketPctByTech = () => {
         <div>
           <Doughnut
             data={pyChartData}
-            options={{...chartOptions, title: { display: true, text: 'Python Market Share by Location' }}}
+            options={{ ...chartOptions, title: { display: true, text: 'Python Market Share by Location' }}}
             plugins={[ChartDataLabels]}
           />
         </div>

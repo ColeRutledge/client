@@ -13,6 +13,9 @@ const chartOptions = {
     display: true,
     text: 'Avg Market Salaries',
   },
+  layout: {
+    padding: 50,
+  },
   legend: {
     labels: {
       filter: function(legendItem, chartData) {
@@ -138,10 +141,9 @@ const MarketSalary = () => {
         style={{
           backgroundColor: '#EEE',
           margin: '50px',
-          padding: '25px',
           boxShadow: '0 10px 30px 0 rgba(0,0,0,.3), 0 1px 2px 0 rgba(0,0,0,.2)',
           width: '80vw',
-          maxWidth: '1250px',
+          maxWidth: '1500px',
           minWidth: '800px',
           height: '60vh',
         }}
