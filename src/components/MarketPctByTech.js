@@ -8,8 +8,10 @@ const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 
 
 const chartOptions = {
+  // onResize: (instance, size) => { console.log(instance, size) },
   cutoutPercentage: 80,
   maintainAspectRatio: false,
+  responsive: true,
   layout: { padding: 50 },
   title: { display: true, text: 'JavaScript Market Share by Location' },
   legend: { labels: { padding: 20, fontSize: 13 }, position: 'bottom' },
@@ -51,6 +53,21 @@ const MarketPctByTech = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // useEffect(() => {
+  //   function handleResize() {
+  //     // chartRef.forceUpdate()
+  //     chartRef.current.chartInstance.resize()
+  //     // console.dir(chartRef.current.chartInstance)
+  //     // console.dir(chartRef.current)
+  //     // chartRef.current.update()
+  //     // console.dir(chartRef)
+  //     console.log('resized to: ', window.innerWidth, 'x', window.innerHeight)
+  //   }
+
+  //   window.addEventListener('resize', handleResize)
+  // })
+
+
   const jsChartData = {
     labels: data.javascript?.labels,
     datasets: [
@@ -79,7 +96,7 @@ const MarketPctByTech = () => {
 
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
       <div
         style={{
           display: 'grid',
@@ -90,17 +107,18 @@ const MarketPctByTech = () => {
           minWidth: '800px',
           maxWidth: '1500px',
           margin: '50px',
-          boxShadow: '0 10px 30px 0 rgba(0,0,0,.3), 0 1px 2px 0 rgba(0,0,0,.2)'
+          boxShadow: '0 10px 30px 0 rgba(0,0,0,.3), 0 1px 2px 0 rgba(0,0,0,.2)',
+          position: 'relative',
         }}
       >
-        <div>
+        <div style={{ position: 'relative' }}>
           <Doughnut
             data={jsChartData}
             options={chartOptions}
             plugins={[ChartDataLabels]}
             />
         </div>
-        <div>
+        <div style={{ position: 'relative' }}>
           <Doughnut
             data={pyChartData}
             options={{

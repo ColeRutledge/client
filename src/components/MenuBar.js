@@ -84,11 +84,17 @@ export default function MenuBar() {
           >
             {auth
               ? <div>
+                  <MenuItem onClick={handleMClose} component={Link} to='/'>
+                    <Typography>Dashboard</Typography>
+                  </MenuItem>
                   <MenuItem onClick={handleMClose} component={Link} to='/feed'>
                     <Typography>Feed</Typography>
                   </MenuItem>
                   <MenuItem onClick={handleMClose} component={Link} to='/bookmarks'>
                     <Typography>Bookmarks</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleMClose} component={Link} to='/search'>
+                    <Typography>Search</Typography>
                   </MenuItem>
                 </div>
               : <div>

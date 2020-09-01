@@ -8,6 +8,7 @@ import Feed from './Feed'
 import Bookmarks from './Bookmarks'
 import ProtectedRoute from './ProtectedRoute'
 import Dashboard from './Dashboard'
+import SearchWidget from './SearchWidget'
 
 
 const Routes = () => {
@@ -18,6 +19,7 @@ const Routes = () => {
         <Route exact path='/login' render={() => <Login />} />
         <Route exact path='/register' render={() => <Register />} />
         <ProtectedRoute exact path='/' component={Dashboard} />
+        <ProtectedRoute exact path='/search' component={SearchWidget} />
         <ProtectedRoute exact path='/feed' component={Feed} />
         <ProtectedRoute exact path='/bookmarks' component={Bookmarks} />
       </Switch>

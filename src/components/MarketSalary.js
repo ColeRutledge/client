@@ -14,11 +14,12 @@ defaults.global.plugins.datalabels.align = 'end'
 
 const chartOptions = {
   maintainAspectRatio: false,
+  responsive: true,
   title: { display: true, text: 'Avg Market Salaries' },
   layout: { padding: 50 },
   legend: {
     labels: {
-      filter: (legendItem, chartData) => legendItem.text != 'Avg' },
+      filter: (legendItem, chartData) => legendItem.text !== 'Avg' },
       position: 'bottom',
   },
   plugins: { datalabels: { formatter: (value, context) => '$' + value + 'k' }},
