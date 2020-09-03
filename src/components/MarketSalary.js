@@ -2,15 +2,14 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { Bar, defaults } from 'react-chartjs-2'
-import Chart from 'chart.js'
+// import Chart from 'chart.js'
 import UserContext from '../context/UserContext'
 
 const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 
-Chart.plugins.unregister(ChartDataLabels)
+// Chart.plugins.unregister(ChartDataLabels)
 defaults.global.defaultFontSize = 15
-defaults.global.plugins.datalabels.anchor = 'end'
-defaults.global.plugins.datalabels.align = 'end'
+
 
 const chartOptions = {
   maintainAspectRatio: false,
@@ -18,23 +17,29 @@ const chartOptions = {
   title: { display: true, text: 'Avg Market Salaries' },
   layout: { padding: 50 },
   legend: {
-    labels: {
-      filter: (legendItem, chartData) => legendItem.text !== 'Avg' },
-      position: 'bottom',
+    position: 'bottom',
+    // labels: { filter: (legendItem, chartData) => legendItem.text !== 'Avg' },
   },
-  plugins: { datalabels: { formatter: (value, context) => '$' + value + 'k' }},
+  plugins: {
+    datalabels: {
+      anchor: 'end',
+      align: 'end',
+      font: { size: 12 },
+      formatter: (value, context) => '$' + Math.round(value) + 'k'
+    },
+  },
   tooltips: {
     callbacks: {
       label: function(tooltipItem, data) {
         let label = data.datasets[tooltipItem.datasetIndex].label || ''
-        label += ': $' + Math.round(tooltipItem.yLabel)  + 'k'
+        label += ': $' + tooltipItem.yLabel  + 'k'
         return label
   }}},
   scales: { xAxes: [{ gridLines: { display: false } }],
     yAxes: [{
       gridLines: { drawOnChartArea: false },
       ticks: {
-        stepSize: 15, max: 165.000, min: 90.000,
+        stepSize: 15, max: 195.000, min: 90.000,
         callback: (value, index, values) => '$' + value + 'k' },
   }]}}
 
@@ -79,7 +84,7 @@ const MarketSalary = () => {
       {
         label: 'JavaScript',
         data: data.javascript?.avg_salaries,
-        backgroundColor: 'rgba(247, 223, 30, 0.4)',
+        backgroundColor: 'rgba(247, 223, 30, 0.2)',
         borderColor: 'rgba(247, 223, 30, 1)',
         borderWidth: 2,
       },
@@ -88,6 +93,20 @@ const MarketSalary = () => {
         data: data.python?.avg_salaries,
         backgroundColor: 'rgba(55, 118, 171, 0.2)',
         borderColor: 'rgba(55, 118, 171, 1)',
+        borderWidth: 2,
+      },
+      {
+        label: 'Java',
+        data: data.java?.avg_salaries,
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 2,
+      },
+      {
+        label: 'Ruby',
+        data: data.ruby?.avg_salaries,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 2,
       },
     ]

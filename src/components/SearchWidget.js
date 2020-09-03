@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-// import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import SettingsRoundedIcon from '@material-ui/icons/SettingsRounded';
+import UserContext from '../context/UserContext'
+import SettingsRoundedIcon from '@material-ui/icons/SettingsRounded'
 import {
   Accordion,
   AccordionSummary,
@@ -13,14 +13,21 @@ import {
   Typography,
   Grid,
   Divider,
+  Switch,
 } from '@material-ui/core'
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    padding: 0,
     // padding: '5px 0',
     backgroundColor: '#EEE',
+    margin: '0 0 20px 0',
   },
+  switch: {
+    color: theme.palette.primary,
+  }
   // paper: {
   //   padding: theme.spacing(2),
   //   margin: '0 10px',
@@ -30,169 +37,188 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 
-const SearchWidget = () => {
-  const [ checkboxes, setCheckboxes ] = useState({
-    javascript: true,
-    python: true,
-    ruby: true,
-    java: true,
-    austin: true,
-    charlotte: true,
-    newYork: true,
-    sanFrancisco: true,
-    washington: true,
-  })
+const SearchWidget = ({ filterByOptions }) => {
+  const { options, setOptions } = useContext(UserContext)
   const classes = useStyles()
 
+
   const handleChange = (event) => {
-    setCheckboxes({ ...checkboxes, [event.target.name]: event.target.checked })
+    setOptions({ ...options, [event.target.name]: event.target.checked })
+    const checked = event.target.checked
+    const name = event.target.name
+    filterByOptions(name, checked)
   }
 
   return (
-    <Container >
+    <Container disableGutters={true} >
       <Accordion className={classes.root}>
         <AccordionSummary expandIcon={<SettingsRoundedIcon />} >
           {/* <Typography variant='h6'>Search Config</Typography> */}
         </AccordionSummary>
         <AccordionDetails>
-          <Grid
-            container
+          <Grid container
             spacing={2}
             justify='space-around'
           >
-            <Grid item xs={6}>
+            <Grid item container
+              xs={6}
+              justify='flex-end'
+              component={FormControlLabel}
+              label='Consulting'
+              control={
+                <Switch
+                  checked={options.consulting}
+                  onChange={handleChange}
+                  name="consulting"
+                ></Switch>
+              }
+            />
+            <Grid item container
+              xs={6}
+              justify='flex-start'
+              component={FormControlLabel}
+              label='Heavy Filter'
+              control={
+                <Switch
+                  checked={options.filter}
+                  onChange={handleChange}
+                  name="filter"
+                  color='primary'
+                ></Switch>
+              }
+            />
+            <Grid item xs={5}>
               <Typography variant='h6' align='center' gutterBottom={true}>Tech</Typography>
               <Divider />
-              <Grid
-                container
+              <Grid container
                 component={FormGroup}
                 row={true}
+                // justify='space-between'
               >
                 <Grid item
                   xs={12}
                   md={6}
                   // justify='space-around'
+                  label="JavaScript"
                   component={FormControlLabel}
                   control={
                     <Checkbox
-                      checked={checkboxes.javascript}
+                      checked={options.javascript}
                       onChange={handleChange}
                       name="javascript"
                     />}
-                  label="JavaScript"
                 />
                 <Grid item
                   xs={12}
                   md={6}
                   // justify='space-around'
+                  label="Python"
                   component={FormControlLabel}
                   control={
                     <Checkbox
-                      checked={checkboxes.python}
+                      checked={options.python}
                       onChange={handleChange}
                       name="python"
                     />}
-                  label="Python"
                 />
                 <Grid item
                   xs={12}
                   md={6}
                   // justify='space-around'
+                  label="Ruby"
                   component={FormControlLabel}
                   control={
                     <Checkbox
-                      checked={checkboxes.ruby}
+                      checked={options.ruby}
                       onChange={handleChange}
                       name="ruby"
                     />}
-                  label="Ruby"
                   />
                 <Grid item
                   xs={12}
                   md={6}
                   // justify='space-around'
+                  label="Java"
                   component={FormControlLabel}
                   control={
                     <Checkbox
-                      checked={checkboxes.java}
+                      checked={options.java}
                       onChange={handleChange}
                       name="java"
                     />}
-                  label="Java"
                 />
               </Grid>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={5}>
               <Typography variant='h6' align='center' gutterBottom={true}>Market</Typography>
               <Divider />
               <Grid container component={FormGroup} row={true}>
                 <Grid item
                   xs={12}
                   md={6}
+                  label="Austin, TX"
                   component={FormControlLabel}
                   control={
                     <Checkbox
-                      checked={checkboxes.austin}
+                      checked={options.austin}
                       onChange={handleChange}
                       name="austin"
                       />}
-                  label="Austin, TX"
                 />
                 <Grid item
                   xs={12}
                   md={6}
+                  label="Charlotte, NC"
                   component={FormControlLabel}
                   control={
                     <Checkbox
-                      checked={checkboxes.charlotte}
+                      checked={options.charlotte}
                       onChange={handleChange}
                       name="charlotte"
                     />}
-                  label="Charlotte, NC"
                 />
                 <Grid item
                   xs={12}
                   md={6}
+                  label="New York, NY"
                   component={FormControlLabel}
                   control={
                     <Checkbox
-                      checked={checkboxes.newYork}
+                      checked={options.newYork}
                       onChange={handleChange}
                       name="newYork"
                     />}
-                  label="New York, NY"
                 />
                 <Grid item
                   xs={12}
                   md={6}
+                  label="San Francisco, CA"
                   component={FormControlLabel}
                   control={
                     <Checkbox
-                    checked={checkboxes.sanFrancisco}
+                    checked={options.sanFrancisco}
                     onChange={handleChange}
                     name="sanFrancisco"
                     />}
-                  label="San Francisco, CA"
                 />
                 <Grid item
                   xs={12}
                   md={6}
+                  label="Washington, DC"
                   component={FormControlLabel}
                   control={
                     <Checkbox
-                      checked={checkboxes.washington}
+                      checked={options.washington}
                       onChange={handleChange}
                       name="washington"
-                    />}
-                  label="Washington, DC"
+                    />
+                  }
                 />
               </Grid>
             </Grid>
           </Grid>
         </AccordionDetails>
       </Accordion>
-
-
     </Container>
   )
 }

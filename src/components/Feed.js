@@ -7,6 +7,7 @@ import LinkIcon from '@material-ui/icons/Link'
 import Paper from '@material-ui/core/Paper'
 
 import UserContext from '../context/UserContext'
+import SearchWidget from './SearchWidget'
 const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 
 
@@ -26,8 +27,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Feed = () => {
-  const { auth, setAuth } = useContext(UserContext)
-  const [ postings, setPostings ] = useState([])
+  const { auth, setAuth, postings, setPostings } = useContext(UserContext)
+  const [ feed, setFeed ] = useState([])
   const history = useHistory()
   const classes = useStyles()
 
@@ -42,6 +43,7 @@ const Feed = () => {
         if (res.ok) {
           const data = await res.json()
           console.log(data)
+          setFeed([...data])
           setPostings([...data])
         } else throw res
 
@@ -59,6 +61,36 @@ const Feed = () => {
     fetchFeed()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+
+  const filterByOptions = (name, checked) => {
+    const tech = ['javascript', 'python', 'java', 'ruby']
+    const oMap = {
+      austin: 'Austin, TX',
+      boston: 'Boston, MA',
+      charlotte: 'Charlotte, NC',
+      newYork: 'New York, NY',
+      sanFrancisco: 'San Francisco, CA',
+      seattle: 'Seattle, WA',
+      washington: 'Washington, DC',
+      javascript: 'javascript developer',
+      python: 'python developer',
+      java: 'java developer',
+      ruby: 'ruby developer',
+    }
+
+    if (checked) {
+      const filteredFeed = postings.filter(posting => {
+        return tech.includes(name) ? posting.search_terms === oMap[name] : posting.search_loc === oMap[name]
+      })
+      setFeed([...filteredFeed, ...feed])
+    } else {
+      const filteredFeed = feed.filter(posting => {
+        return tech.includes(name) ? posting.search_terms !== oMap[name] : posting.search_loc !== oMap[name]
+      })
+      setFeed([...filteredFeed])
+    }
+  }
 
   const bookmark = async (rows, row) => {
     // console.log(rows, row)
@@ -92,10 +124,11 @@ const Feed = () => {
 
   return (
     <Container>
-      {postings.length > 0 &&
+      {feed.length > 0 &&
       <div style={{ maxWidth: '100%' }}>
+        <SearchWidget filterByOptions={filterByOptions}/>
         <MaterialTable
-          data={postings}
+          data={feed}
           title='Job Feed'
           onRowClick={(event, rowData, togglePanel) => togglePanel()}
           onSelectionChange={(rows, row) => bookmark(rows, row)}
