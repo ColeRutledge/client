@@ -54,9 +54,9 @@ const Dashboard = () => {
     <Container disableGutters={true} maxWidth={false}>
       <Container disableGutters={true} className={classes.container} >
         <Grid container justify={'space-between'}  >
-          <Grid item xs={4} component={MetricCard} metrics={metrics.pcount_by_loc} />
-          <Grid item xs={4} component={MetricCard} metrics={metrics.pcount_by_tech} />
-          <Grid item xs={4} component={MetricCard} metrics={metrics.top_salaries}/>
+          <Grid item xs={12} component={MetricCard} metrics={metrics.pcount_by_loc} />
+          <Grid item xs={12} component={MetricCard} metrics={metrics.pcount_by_tech} />
+          <Grid item xs={12} component={MetricCard} metrics={metrics.top_salaries}/>
         </Grid>
       </Container>
       <MarketPctByTech />

@@ -1,4 +1,5 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import UserContext from '../context/UserContext'
 import SettingsRoundedIcon from '@material-ui/icons/SettingsRounded'
@@ -16,37 +17,93 @@ import {
   Switch,
 } from '@material-ui/core'
 
-
+const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     padding: 0,
-    // padding: '5px 0',
     backgroundColor: '#EEE',
     margin: '0 0 20px 0',
   },
   switch: {
     color: theme.palette.primary,
   }
-  // paper: {
-  //   padding: theme.spacing(2),
-  //   margin: '0 10px',
-  //   textAlign: 'center',
-  //   color: theme.palette.secondary,
-  // },
 }))
 
 
 const SearchWidget = ({ filterByOptions }) => {
-  const { options, setOptions } = useContext(UserContext)
+  const { options, setOptions, auth, setAuth, setPostings, setFeed, } = useContext(UserContext)
+  const [ defOptions ] = useState({ ...options })
+  const filterOptions = ['senior_filter', 'consulting_filter', 'no_filter']
   const classes = useStyles()
+  const history = useHistory()
 
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     setOptions({ ...options, [event.target.name]: event.target.checked })
     const checked = event.target.checked
     const name = event.target.name
-    filterByOptions(name, checked)
+    console.log(checked, name)
+    filterOptions.includes(name) ? await fetchFilters(name, checked) : filterByOptions(name, checked)
+  }
+
+  const fetchFilters = async (filterName, checked) => {
+    let filt_opt = options
+    filt_opt[filterName] = checked
+
+    if (filterName === 'no_filter') {
+      if (checked) {
+        filt_opt = {
+          ...defOptions,
+          'no_filter': checked,
+          'senior_filter': false,
+          'consulting_filter': false,
+        }
+      } else {
+        filt_opt = {
+          ...defOptions,
+          'no_filter': checked,
+          'senior_filter': true,
+          'consulting_filter': true,
+        }
+      }
+    } else {
+      const consulting_filter = filt_opt['consulting_filter']
+      console.log(consulting_filter)
+      const senior_filter = filt_opt['senior_filter']
+      console.log(senior_filter)
+      filt_opt = {
+        ...defOptions,
+        consulting_filter,
+        senior_filter,
+      }
+    }
+    setOptions({...filt_opt})
+
+    try {
+      const res = await fetch(`${apiUrl}/api/posting`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token') || auth}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(filt_opt),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        setFeed([...data])
+        setPostings([...data])
+      } else throw res
+
+    } catch (err) {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        setAuth('')
+        history.push('/login')
+      }
+      console.error(err)
+    }
   }
 
   return (
@@ -61,29 +118,41 @@ const SearchWidget = ({ filterByOptions }) => {
             justify='space-around'
           >
             <Grid item container
-              xs={6}
+              xs={4}
               justify='flex-end'
               component={FormControlLabel}
-              label='Consulting'
+              label='Filter Consulting'
               control={
                 <Switch
-                  checked={options.consulting}
+                  checked={options.consulting_filter}
                   onChange={handleChange}
-                  name="consulting"
+                  name="consulting_filter"
                 ></Switch>
               }
             />
             <Grid item container
-              xs={6}
-              justify='flex-start'
+              xs={4}
+              justify='center'
               component={FormControlLabel}
-              label='Heavy Filter'
+              label='Filter Senior'
               control={
                 <Switch
-                  checked={options.filter}
+                  checked={options.senior_filter}
                   onChange={handleChange}
-                  name="filter"
-                  color='primary'
+                  name="senior_filter"
+                ></Switch>
+              }
+            />
+            <Grid item container
+              xs={4}
+              justify='flex-start'
+              component={FormControlLabel}
+              label='No Filter'
+              control={
+                <Switch
+                  checked={options.no_filter}
+                  onChange={handleChange}
+                  name="no_filter"
                 ></Switch>
               }
             />

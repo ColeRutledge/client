@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import MaterialTable from 'material-table'
 import { Container, Link, Grid, Typography } from '@material-ui/core'
@@ -73,7 +73,6 @@ const Feed = () => {
 
   const filterByOptions = (name, checked) => {
     let filteredFeed = postings.slice()
-    console.log(name, checked)
     const tech = ['javascript', 'python', 'java', 'ruby']
     const oMap = {
       austin: 'Austin, TX',
@@ -125,7 +124,8 @@ const Feed = () => {
       })
 
       if (res.ok) {
-        const data = await res.json()
+        // returns bookmark list
+        // const data = await res.json()
         // console.log(data)
         // setPostings([...data])
       } else throw res
@@ -163,7 +163,6 @@ const Feed = () => {
           }}
           options={{
             selection: true,
-            // selectionProps: ,
             showSelectAllCheckbox: false,
             rowStyle: { backgroundColor: '#EEE' },
             headerStyle: { backgroundColor: '#EEE' },
@@ -197,14 +196,7 @@ const Feed = () => {
                 <LinkIcon color='error'/>
               </Link>
               ),
-              // headerStyle: {
-              //   textAlign: 'right',
-              // },
-              // cellStyle: {
-              //   textAlign: 'right',
-              // },
             },
-            // { title: 'State', field: 'state' },
           ]}
           detailPanel={posting => {
             return (

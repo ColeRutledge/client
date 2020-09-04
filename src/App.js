@@ -23,8 +23,9 @@ function App() {
     sanFrancisco: true,
     seattle: true,
     washington: true,
-    consulting: true,
-    filter: false,
+    senior_filter: true,
+    consulting_filter: true,
+    no_filter: false,
   })
 
   const context = {
