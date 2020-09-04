@@ -14,7 +14,6 @@ const Register = () => {
   const { register, handleSubmit, errors, clearErrors } = useForm()
 
   const onSubmit = async data => {
-    console.log(data)
     let res
 
     try {

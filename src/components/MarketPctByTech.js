@@ -44,7 +44,7 @@ const MarketPctByTech = () => {
           setAuth('')
           history.push('/login')
         }
-        console.dir(err)
+        // console.dir(err)
         console.error(err)
       }
     }

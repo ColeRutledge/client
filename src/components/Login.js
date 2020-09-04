@@ -14,7 +14,6 @@ const Login = () => {
   const { register, handleSubmit, errors, clearErrors } = useForm()
 
   const onSubmit = async data => {
-    console.log(data)
     if (!data.email) data = { email: 'demo_user@email.com', password: 'password1' }
     setLoading(true)
     try {
@@ -30,13 +29,11 @@ const Login = () => {
         if (data.error) {
           return setLoginError(data.error)
         }
-        console.log('Successful fetch!')
         localStorage.setItem('token', data.token)
         localStorage.setItem('username', data.username)
         localStorage.setItem('id', data.id)
         setAuth(data.token)
         setUserId(+data.id)
-        console.log(data)
       } else throw res
 
     } catch (err) {

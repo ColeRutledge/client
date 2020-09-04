@@ -50,7 +50,6 @@ const Feed = () => {
 
         if (res.ok) {
           const data = await res.json()
-          // console.log(data)
           setFeed([...data])
           setPostings([...data])
         } else throw res
@@ -61,7 +60,6 @@ const Feed = () => {
           setAuth('')
           history.push('/login')
         }
-        // console.dir(err)
         console.error(err)
       }
     }

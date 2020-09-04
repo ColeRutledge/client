@@ -43,7 +43,7 @@ const SearchWidget = ({ filterByOptions }) => {
     setOptions({ ...options, [event.target.name]: event.target.checked })
     const checked = event.target.checked
     const name = event.target.name
-    console.log(checked, name)
+    // console.log(checked, name)
     filterOptions.includes(name) ? await fetchFilters(name, checked) : filterByOptions(name, checked)
   }
 
@@ -69,9 +69,7 @@ const SearchWidget = ({ filterByOptions }) => {
       }
     } else {
       const consulting_filter = filt_opt['consulting_filter']
-      console.log(consulting_filter)
       const senior_filter = filt_opt['senior_filter']
-      console.log(senior_filter)
       filt_opt = {
         ...defOptions,
         consulting_filter,
