@@ -27,6 +27,7 @@ function App() {
     consulting_filter: true,
     no_filter: false,
   })
+  const [ defOptions ] = useState({ ...options })
 
   const context = {
     auth,
@@ -41,6 +42,7 @@ function App() {
     setFeed,
     filters,
     setFilters,
+    defOptions,
   }
 
 

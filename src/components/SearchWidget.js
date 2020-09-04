@@ -32,8 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 const SearchWidget = ({ filterByOptions }) => {
-  const { options, setOptions, auth, setAuth, setPostings, setFeed, } = useContext(UserContext)
-  const [ defOptions ] = useState({ ...options })
+  const { options, setOptions, auth, setAuth, setPostings, setFeed, defOptions } = useContext(UserContext)
   const filterOptions = ['senior_filter', 'consulting_filter', 'no_filter']
   const classes = useStyles()
   const history = useHistory()

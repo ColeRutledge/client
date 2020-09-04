@@ -16,7 +16,7 @@ FROM node:12-alpine as base
 # ENV PATH /app/node_modules/.bin:$PATH
 
 
-# Development
+# # Development
 
 # FROM base as dev
 
