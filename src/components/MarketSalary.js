@@ -114,16 +114,14 @@ const MarketSalary = () => {
 
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '100px' }}>
       <div
         style={{
           backgroundColor: '#EEE',
-          margin: '50px',
+          margin: '50px 0',
           boxShadow: '0 10px 30px 0 rgba(0,0,0,.3), 0 1px 2px 0 rgba(0,0,0,.2)',
-          width: '80vw',
           height: '60vh',
-          maxWidth: '1500px',
-          minWidth: '800px',
+          width: '1500px',
         }}
       >
         <Bar

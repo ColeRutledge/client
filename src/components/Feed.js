@@ -8,13 +8,14 @@ import Paper from '@material-ui/core/Paper'
 
 import UserContext from '../context/UserContext'
 import SearchWidget from './SearchWidget'
+import Footer from './Footer'
 const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    padding: '5px 0',
+    padding: '10px 0',
     backgroundColor: '#EEE',
   },
   paper: {
@@ -27,10 +28,17 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Feed = () => {
-  const { auth, setAuth, postings, setPostings } = useContext(UserContext)
-  const [ feed, setFeed ] = useState([])
   const history = useHistory()
   const classes = useStyles()
+  const {
+    auth,
+    setAuth,
+    postings,
+    setPostings,
+    feed,
+    setFeed,
+    filters,
+    setFilters } = useContext(UserContext)
 
   useEffect(() => {
     const fetchFeed = async () => {
@@ -42,7 +50,7 @@ const Feed = () => {
 
         if (res.ok) {
           const data = await res.json()
-          console.log(data)
+          // console.log(data)
           setFeed([...data])
           setPostings([...data])
         } else throw res
@@ -58,12 +66,14 @@ const Feed = () => {
       }
     }
 
-    fetchFeed()
+    if (postings === null) fetchFeed()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 
   const filterByOptions = (name, checked) => {
+    let filteredFeed = postings.slice()
+    console.log(name, checked)
     const tech = ['javascript', 'python', 'java', 'ruby']
     const oMap = {
       austin: 'Austin, TX',
@@ -80,20 +90,30 @@ const Feed = () => {
     }
 
     if (checked) {
-      const filteredFeed = postings.filter(posting => {
-        return tech.includes(name) ? posting.search_terms === oMap[name] : posting.search_loc === oMap[name]
+
+      const ff = filters.filter(filter => filter !== name)
+      ff.forEach(filter => {
+        filteredFeed = filteredFeed.filter(posting => {
+          if (tech.includes(filter)) {
+            return posting.search_terms !== oMap[filter]
+          } else {
+            return posting.search_loc !== oMap[filter]
+          }
+        })
       })
-      setFeed([...filteredFeed, ...feed])
+
+      setFilters([ ...ff ])
+      setFeed([ ...filteredFeed ])
     } else {
-      const filteredFeed = feed.filter(posting => {
+      setFilters([ ...filters, name ])
+      filteredFeed = feed.filter(posting => {
         return tech.includes(name) ? posting.search_terms !== oMap[name] : posting.search_loc !== oMap[name]
       })
-      setFeed([...filteredFeed])
+      setFeed([ ...filteredFeed ])
     }
   }
 
   const bookmark = async (rows, row) => {
-    // console.log(rows, row)
     try {
       const res = await fetch(`${apiUrl}/api/user/bookmark`, {
         method: 'POST',
@@ -106,7 +126,7 @@ const Feed = () => {
 
       if (res.ok) {
         const data = await res.json()
-        console.log(data)
+        // console.log(data)
         // setPostings([...data])
       } else throw res
 
@@ -116,16 +136,21 @@ const Feed = () => {
         setAuth('')
         history.push('/login')
       }
-      console.dir(err)
+      // console.dir(err)
       console.error(err)
     }
   }
 
 
   return (
-    <Container>
-      {feed.length > 0 &&
-      <div style={{ maxWidth: '100%' }}>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      height: '100vh',
+    }}
+    >
+      <Container disableGutters={true}>
         <SearchWidget filterByOptions={filterByOptions}/>
         <MaterialTable
           data={feed}
@@ -133,24 +158,35 @@ const Feed = () => {
           onRowClick={(event, rowData, togglePanel) => togglePanel()}
           onSelectionChange={(rows, row) => bookmark(rows, row)}
           localization={{
-            toolbar: {
-              nRowsSelected: `{0} posting(s) bookmarked`
-            },
+            toolbar: { nRowsSelected: `{0} posting(s) bookmarked` },
+            body: { emptyDataSourceMessage: postings ? 'No postings that match that criteria.' : 'Loading...' },
           }}
           options={{
             selection: true,
             // selectionProps: ,
             showSelectAllCheckbox: false,
             rowStyle: { backgroundColor: '#EEE' },
-            // headerStyle: { backgroundColor: '#02203c', color: '#FFF' },
+            headerStyle: { backgroundColor: '#EEE' },
             pageSize: 10,
             pageSizeOptions: [10, 25, 50],
             grouping: true,
           }}
           columns={[
-            { title: 'Title', field: 'title' },
-            { title: 'Company', field: 'company' },
-            { title: 'Location', field: 'search_loc' },
+            {
+              title: 'Title',
+              field: 'title',
+              cellStyle: { whiteSpace: 'nowrap' },
+            },
+            {
+              title: 'Company',
+              field: 'company',
+              cellStyle: { whiteSpace: 'nowrap' },
+            },
+            {
+              title: 'Location',
+              field: 'search_loc',
+              cellStyle: { whiteSpace: 'nowrap' },
+            },
             {
               title: 'Link',
               field: 'link',
@@ -204,9 +240,9 @@ const Feed = () => {
             )
           }}
         />
-      </div>
-      }
-  </Container>
+      </Container>
+      <Footer />
+    </div>
   )
 }
 

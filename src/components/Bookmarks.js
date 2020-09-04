@@ -7,13 +7,14 @@ import LinkIcon from '@material-ui/icons/Link'
 import Paper from '@material-ui/core/Paper'
 
 import UserContext from '../context/UserContext'
+import Footer from './Footer'
 const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
 
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    padding: '5px 0',
+    padding: '10px 0',
     backgroundColor: '#EEE',
   },
   paper: {
@@ -91,15 +92,23 @@ const Bookmarks = () => {
 
 
   return (
-    <Container >
-      {bookmarks.length > 0 &&
-      <div style={{ maxWidth: '100%' }}>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      height: '100vh',
+    }}
+    >
+      <Container >
         <MaterialTable
           data={bookmarks}
           title='Bookmarks'
           showEmptyDataSourceMessage
           onRowClick={(event, rowData, togglePanel) => togglePanel()}
           onSelectionChange={(rows, row) => bookmark(rows, row)}
+          localization={{
+            body: { emptyDataSourceMessage: 'You currently have no bookmarks.' },
+          }}
           options={{
             selection: true,
             showSelectAllCheckbox: false,
@@ -112,13 +121,26 @@ const Bookmarks = () => {
             pageSizeOptions: [10, 25, 50],
           }}
           columns={[
-            { title: 'Title', field: 'title' },
-            { title: 'Company', field: 'company' },
-            { title: 'Location', field: 'search_loc' },
+            {
+              title: 'Title',
+              field: 'title',
+              cellStyle: { whiteSpace: 'nowrap' },
+            },
+            {
+              title: 'Company',
+              field: 'company',
+              cellStyle: { whiteSpace: 'nowrap' },
+            },
+            {
+              title: 'Location',
+              field: 'search_loc',
+              cellStyle: { whiteSpace: 'nowrap' },
+            },
             {
               title: 'Link',
               field: 'link',
               disableClick: true,
+              sorting: false,
               render: posting => (
               <Link href={posting.link} target='_blank'>
                 <LinkIcon color='error'/>
@@ -167,9 +189,9 @@ const Bookmarks = () => {
             )
           }}
         />
-      </div>
-      }
-  </Container>
+      </Container>
+      <Footer/>
+    </div>
   )
 }
 

@@ -75,8 +75,8 @@ const MarketPctByTech = () => {
         label: 'JavaScript',
         data: data.javascript?.mkt_pct,
         backgroundColor: data.javascript?.background_color,
-        borderColor: 'rgba(247, 223, 30, 1)',
-        borderWidth: 1,
+        // borderColor: 'rgba(247, 223, 30, 1)',
+        borderWidth: 2,
       },
     ]
   }
@@ -88,8 +88,8 @@ const MarketPctByTech = () => {
         label: 'Python',
         data: data.python?.mkt_pct,
         backgroundColor: data.python?.background_color,
-        borderColor: 'rgba(55, 118, 171, 1)',
-        borderWidth: 1,
+        // borderColor: 'rgba(55, 118, 171, 1)',
+        borderWidth: 2,
       },
     ]
   }
@@ -102,13 +102,11 @@ const MarketPctByTech = () => {
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
           backgroundColor: '#EEE',
-          width: '80vw',
           height: '60vh',
-          minWidth: '800px',
-          maxWidth: '1500px',
-          margin: '50px',
+          width: '1500px',
+          margin: '50px 0',
           boxShadow: '0 10px 30px 0 rgba(0,0,0,.3), 0 1px 2px 0 rgba(0,0,0,.2)',
-          position: 'relative',
+          // position: 'relative',
         }}
       >
         <div style={{ position: 'relative' }}>

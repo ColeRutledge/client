@@ -9,15 +9,19 @@ function App() {
   const [ auth, setAuth ] = useState(localStorage.getItem('token') || '')
   const [ userId, setUserId ] = useState(+localStorage.getItem('id') || null)
   const [ postings, setPostings ] = useState(null)
+  const [ feed, setFeed ] = useState([])
+  const [ filters, setFilters ] = useState([])
   const [ options, setOptions ] = useState({
     javascript: true,
     python: true,
     ruby: true,
     java: true,
     austin: true,
+    boston: true,
     charlotte: true,
     newYork: true,
     sanFrancisco: true,
+    seattle: true,
     washington: true,
     consulting: true,
     filter: false,
@@ -32,6 +36,10 @@ function App() {
     setPostings,
     options,
     setOptions,
+    feed,
+    setFeed,
+    filters,
+    setFilters,
   }
 
 

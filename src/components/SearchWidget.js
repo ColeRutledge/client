@@ -168,6 +168,19 @@ const SearchWidget = ({ filterByOptions }) => {
                 <Grid item
                   xs={12}
                   md={6}
+                  label="Boston, MA"
+                  component={FormControlLabel}
+                  control={
+                    <Checkbox
+                      checked={options.boston}
+                      onChange={handleChange}
+                      name="boston"
+                    />
+                  }
+                />
+                <Grid item
+                  xs={12}
+                  md={6}
                   label="Charlotte, NC"
                   component={FormControlLabel}
                   control={
@@ -200,6 +213,19 @@ const SearchWidget = ({ filterByOptions }) => {
                     onChange={handleChange}
                     name="sanFrancisco"
                     />}
+                />
+                <Grid item
+                  xs={12}
+                  md={6}
+                  label="Seattle, WA"
+                  component={FormControlLabel}
+                  control={
+                    <Checkbox
+                      checked={options.seattle}
+                      onChange={handleChange}
+                      name="seattle"
+                    />
+                  }
                 />
                 <Grid item
                   xs={12}

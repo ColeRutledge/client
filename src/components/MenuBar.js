@@ -17,7 +17,7 @@ import UserContext from '../context/UserContext'
 const useStyles = makeStyles((theme) => ({
   root: {
     // flexGrow: 1,
-    marginBottom: '100px',
+    // marginBottom: '100px',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -92,9 +92,6 @@ export default function MenuBar() {
                   </MenuItem>
                   <MenuItem onClick={handleMClose} component={Link} to='/bookmarks'>
                     <Typography>Bookmarks</Typography>
-                  </MenuItem>
-                  <MenuItem onClick={handleMClose} component={Link} to='/search'>
-                    <Typography>Search</Typography>
                   </MenuItem>
                 </div>
               : <div>
