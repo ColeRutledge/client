@@ -1,20 +1,11 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import UserContext from '../context/UserContext'
 import SettingsRoundedIcon from '@material-ui/icons/SettingsRounded'
 import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  FormGroup,
-  FormControlLabel,
-  Container,
-  Checkbox,
-  Typography,
-  Grid,
-  Divider,
-  Switch,
+  Accordion, AccordionSummary, AccordionDetails, FormGroup,
+  FormControlLabel, Container, Checkbox, Typography, Grid, Divider, Switch
 } from '@material-ui/core'
 
 const apiUrl = process.env.REACT_APP_API_SERVER_BASE_URL
@@ -32,10 +23,13 @@ const useStyles = makeStyles((theme) => ({
 
 
 const SearchWidget = ({ filterByOptions }) => {
-  const { options, setOptions, auth, setAuth, setPostings, setFeed, defOptions } = useContext(UserContext)
-  const filterOptions = ['senior_filter', 'consulting_filter', 'no_filter']
   const classes = useStyles()
   const history = useHistory()
+  const filterOptions = ['senior_filter', 'consulting_filter', 'no_filter']
+  const {
+    options, setOptions, auth, setAuth,
+    setPostings, setFeed, defOptions
+  } = useContext(UserContext)
 
 
   const handleChange = async (event) => {
@@ -43,7 +37,9 @@ const SearchWidget = ({ filterByOptions }) => {
     const checked = event.target.checked
     const name = event.target.name
     // console.log(checked, name)
-    filterOptions.includes(name) ? await fetchFilters(name, checked) : filterByOptions(name, checked)
+    filterOptions.includes(name)
+      ? await fetchFilters(name, checked)
+      : filterByOptions(name, checked)
   }
 
   const fetchFilters = async (filterName, checked) => {
